@@ -35,25 +35,3 @@ WITH users_count AS (
 SELECT
     *
 FROM users_count, products_count, product_cost_profit, order_items_counts, avg_product_delivering;
-
-WITH centers_by_items AS (
-    SELECT
-        items.product_distribution_center_id AS center_id,
-        dist_centers.name AS center_name,
-        COUNT(*) AS distribution_center_count
-    FROM inventory_items AS items
-
-    JOIN distribution_centers AS dist_centers ON(dist_centers.id = items.product_distribution_center_id)
-
-    GROUP BY items.product_distribution_center_id, dist_centers.name
-), max_items_center AS (
-    SELECT
-        center_id, center_name, distribution_center_count
-    FROM centers_by_items
-
-    WHERE distribution_center_count = (SELECT MAX(distribution_center_count) FROM centers_by_items)
-)
-
-SELECT
-    *
-FROM centers_by_items;
