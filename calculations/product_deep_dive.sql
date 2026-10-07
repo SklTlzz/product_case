@@ -41,34 +41,6 @@ FROM ranked_by_margin;
 
 
 
-WITH returns_cancells_by_traffic AS ( 
-    SELECT
-        users.traffic_source,
-        COUNT(*) AS count_items_orders,
-        COUNT(CASE WHEN items.status = 'Returned' THEN items.id END) AS count_returned,
-        COUNT(CASE WHEN items.status = 'Cancelled' THEN items.id END) AS count_cancelled,
-        COUNT(CASE WHEN items.status IN ('Cancelled', 'Returned') THEN items.id END) AS count_returned_and_cancelled,
-        ROUND(COUNT(CASE WHEN items.status = 'Returned' THEN items.id END) * 1.0 / COUNT(*) * 100, 2) AS prct_returned,
-        ROUND(COUNT(CASE WHEN items.status = 'Cancelled' THEN items.id END) * 1.0 / COUNT(*) * 100, 2) AS prct_cancelled,
-        ROUND(COUNT(CASE WHEN items.status IN ('Cancelled', 'Returned') THEN items.id END) * 1.0 / COUNT(*) * 100, 2) AS prct_returned_and_cancelled
-    FROM users
-
-    JOIN order_items AS items ON (items.user_id = users.id)
-
-    GROUP BY users.traffic_source
-), ranked_by_traffic AS (
-    SELECT
-        *,
-        DENSE_RANK() OVER(ORDER BY prct_returned_and_cancelled DESC) AS traffic_rank
-    FROM returns_cancells_by_traffic
-)
-
-SELECT
-    *
-FROM ranked_by_traffic;
-
-
-
 WITH returns_cancells_by_category AS (
     SELECT
         products.category,
