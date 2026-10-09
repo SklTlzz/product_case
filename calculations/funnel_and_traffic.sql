@@ -7,9 +7,9 @@ WITH returns_cancells_by_traffic AS (
         COUNT(CASE WHEN items.status = 'Returned' THEN items.id END) AS count_returned,
         COUNT(CASE WHEN items.status = 'Cancelled' THEN items.id END) AS count_cancelled,
         COUNT(CASE WHEN items.status IN ('Cancelled', 'Returned') THEN items.id END) AS count_returned_and_cancelled,
-        ROUND(COUNT(CASE WHEN items.status = 'Returned' THEN items.id END) * 1.0 / COUNT(*) * 100, 2) AS prct_returned,
-        ROUND(COUNT(CASE WHEN items.status = 'Cancelled' THEN items.id END) * 1.0 / COUNT(*) * 100, 2) AS prct_cancelled,
-        ROUND(COUNT(CASE WHEN items.status IN ('Cancelled', 'Returned') THEN items.id END) * 1.0 / COUNT(*) * 100, 2) AS prct_returned_and_cancelled
+        ROUND(COUNT(CASE WHEN items.status = 'Returned' THEN items.id END) * 100.0 / NULLIF(COUNT(*), 0), 2) AS prct_returned,
+        ROUND(COUNT(CASE WHEN items.status = 'Cancelled' THEN items.id END) * 100.0 / NULLIF(COUNT(*), 0), 2) AS prct_cancelled,
+        ROUND(COUNT(CASE WHEN items.status IN ('Cancelled', 'Returned') THEN items.id END) * 100.0 / NULLIF(COUNT(*), 0), 2) AS prct_returned_and_cancelled
     FROM users
 
     JOIN order_items AS items ON (items.user_id = users.id)
@@ -56,7 +56,7 @@ WITH count_by_event AS (
 ), conversion_by_event AS (
     SELECT
         *,
-        ROUND(next_count_events * 100.0 / count_events, 2) AS event_conversion
+        ROUND(next_count_events * 100.0 / NULLIF(count_events, 0), 2) AS event_conversion
     FROM count_by_event
 )
 
@@ -65,7 +65,7 @@ SELECT
 FROM conversion_by_event;
 
 
--- Section popularity
+-- Sections popularity
 
 SELECT
     *

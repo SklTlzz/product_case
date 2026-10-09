@@ -24,7 +24,7 @@ WITH users_count AS (
     SELECT
         COUNT(returned_at) AS count_returned,
         COUNT(*) AS count_ordered,
-        ROUND(COUNT(returned_at) * 1.0 / COUNT(*) * 100, 2) AS returned_prct
+        ROUND(COUNT(returned_at) * 100.0 / NULLIF(COUNT(*), 0), 2) AS returned_prct
     FROM order_items
 ), avg_product_delivering AS (
     SELECT

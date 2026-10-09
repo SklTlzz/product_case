@@ -1,3 +1,5 @@
+-- ARPU, ARPPU, AOV, AVG_MARGIN
+
 WITH count_users AS (
     SELECT
         COUNT(DISTINCT users.id) AS count_all_users,
@@ -67,6 +69,8 @@ SELECT
 FROM arpus, aov, avg_margin;
 
 
+-- Costs and profits by product
+
 WITH cost_profit_by_product AS (
     SELECT
         products.id AS product_id,
@@ -85,6 +89,8 @@ SELECT
 FROM cost_profit_by_product;
 
 
+-- Counts by product
+
 WITH products_count AS (
     SELECT
         products.id AS product_id,
@@ -102,6 +108,8 @@ SELECT
 FROM products_count;
 
 
+-- Centers by items count
+
 WITH centers_by_items AS (
     SELECT
         items.product_distribution_center_id AS center_id,
@@ -118,6 +126,8 @@ SELECT
     *
 FROM centers_by_items;
 
+
+-- Revenue by month
 
 WITH order_items_by_months AS (
     SELECT
