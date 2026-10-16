@@ -1,5 +1,7 @@
 -- ARPU, ARPPU, AOV, AVG_MARGIN
 
+CREATE OR REPLACE VIEW arpu_arppu_aov_avgmargin AS
+
 WITH count_users AS (
     SELECT
         COUNT(DISTINCT users.id) AS count_all_users,
@@ -71,6 +73,8 @@ FROM arpus, aov, avg_margin;
 
 -- Costs and profits by product
 
+CREATE OR REPLACE VIEW costs_profits_by_product AS
+
 WITH cost_profit_by_product AS (
     SELECT
         products.id AS product_id,
@@ -91,6 +95,8 @@ FROM cost_profit_by_product;
 
 -- Counts by product
 
+CREATE OR REPLACE VIEW counts_by_product AS
+
 WITH products_count AS (
     SELECT
         products.id AS product_id,
@@ -110,6 +116,8 @@ FROM products_count;
 
 -- Centers by items count
 
+CREATE OR REPLACE VIEW centers_by_items_count AS
+
 WITH centers_by_items AS (
     SELECT
         items.product_distribution_center_id AS center_id,
@@ -128,6 +136,8 @@ FROM centers_by_items;
 
 
 -- Revenue by month
+
+CREATE OR REPLACE VIEW revenue_by_month AS
 
 WITH order_items_by_months AS (
     SELECT

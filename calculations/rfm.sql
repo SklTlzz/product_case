@@ -1,5 +1,7 @@
 -- RFM (Recency, Frequency, Monetary)
 
+CREATE OR REPLACE VIEW rfm_analysis AS
+
 WITH global_max AS (
     SELECT
         MAX(created_at)::DATE AS max_dataset_date
@@ -54,6 +56,4 @@ WITH global_max AS (
 
 SELECT
     *
-FROM rfm_human_readable_ranking
-
-ORDER BY recency_rank DESC, frequency_rank DESC, monetary_rank DESC
+FROM rfm_human_readable_ranking;

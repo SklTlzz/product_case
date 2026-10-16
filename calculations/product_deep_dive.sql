@@ -1,5 +1,7 @@
 -- Sellings by product
 
+CREATE OR REPLACE VIEW sellings_by_product AS
+
 WITH sold_items AS (
     SELECT
         product_id, product_name,
@@ -31,6 +33,8 @@ FROM ranked_by_sellings_products;
 
 -- Products margin
 
+CREATE OR REPLACE VIEW margin_by_product AS
+
 WITH products_margin AS (
     SELECT
         id, name,
@@ -49,6 +53,8 @@ FROM ranked_by_margin;
 
 
 -- Returns and cancels by category
+
+CREATE OR REPLACE VIEW returns_and_cancels_by_category AS
 
 WITH returns_cancells_by_category AS (
     SELECT
@@ -87,6 +93,8 @@ FROM ranked_by_category;
 
 -- Returns and cancels by brand
 
+CREATE OR REPLACE VIEW returns_and_cancels_by_brand AS
+
 WITH returns_cancells_by_brand AS (
     SELECT
         products.brand,
@@ -123,6 +131,8 @@ FROM ranked_by_brand;
 
 
 -- Returns and cancels by country
+
+CREATE OR REPLACE VIEW returns_and_cancels_by_country AS
 
 WITH returns_cancells_by_country AS (
     SELECT

@@ -1,5 +1,7 @@
 -- Cohorts revenune
 
+CREATE OR REPLACE VIEW cohorts_revenue AS
+
 WITH first_users_order AS (
     SELECT
         user_id,
@@ -10,6 +12,7 @@ WITH first_users_order AS (
 
     GROUP BY user_id
 )
+
 SELECT
     TO_CHAR(users.first_order, 'YYYY-MM') AS first_order_date,
     (EXTRACT(YEAR FROM items.created_at) - EXTRACT(YEAR FROM users.first_order)) * 12 + (EXTRACT(MONTH FROM items.created_at) - EXTRACT(MONTH FROM users.first_order)) AS months_from_first_order,
@@ -20,12 +23,12 @@ JOIN order_items AS items ON(items.user_id = users.user_id)
 
 WHERE items.status NOT IN ('Cancelled', 'Returned')
 
-GROUP BY first_order_date, months_from_first_order
-
-ORDER BY first_order_date, months_from_first_order;
+GROUP BY first_order_date, months_from_first_order;
 
 
 -- Retention rate
+
+CREATE OR REPLACE VIEW retention_rate AS
 
 WITH first_users_order AS (
     SELECT
@@ -63,6 +66,4 @@ SELECT
     ROUND(users.active_users * 100.0 / NULLIF(sizes.cohort_size, 0), 2) AS retention_rate
 FROM cohorts_active_users AS users
 
-JOIN cohorts_size AS sizes ON (users.first_order_date = sizes.first_order_date)
-
-ORDER BY sizes.first_order_date, users.months_from_first_order;
+JOIN cohorts_size AS sizes ON (users.first_order_date = sizes.first_order_date);

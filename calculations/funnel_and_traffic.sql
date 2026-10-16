@@ -1,5 +1,7 @@
 -- Traffic
 
+CREATE OR REPLACE VIEW traffic AS
+
 WITH returns_cancells_by_traffic AS ( 
     SELECT
         users.traffic_source,
@@ -27,9 +29,9 @@ SELECT
 FROM ranked_by_traffic;
 
 
--- Funnel
+-- Sections popularity
 
-CREATE TEMP TABLE count_by_event_type AS
+CREATE OR REPLACE VIEW sections_popularity AS
     SELECT
         event_type,
         COUNT(DISTINCT session_id) AS count_events,
@@ -45,12 +47,17 @@ CREATE TEMP TABLE count_by_event_type AS
 
     GROUP BY event_type;
 
+
+-- Funnel
+
+CREATE OR REPLACE VIEW funnel AS
+
 WITH count_by_event AS (
     SELECT
         event_type, 
         count_events,
         LEAD(count_events) OVER(ORDER BY event_funnel_num) AS next_count_events
-    FROM count_by_event_type
+    FROM sections_popularity
 
     WHERE event_type NOT IN ('department', 'home', 'cancel')
 ), conversion_by_event AS (
@@ -64,12 +71,6 @@ SELECT
     *
 FROM conversion_by_event;
 
-
--- Sections popularity
-
-SELECT
-    *
-FROM count_by_event_type;
 
 /*
 SELECT

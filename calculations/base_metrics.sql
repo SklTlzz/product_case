@@ -1,3 +1,5 @@
+CREATE OR REPLACE VIEW base_metrics AS
+
 WITH users_count AS (
     SELECT
         COUNT(DISTINCT users.id) AS users_count,
