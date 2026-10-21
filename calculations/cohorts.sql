@@ -11,19 +11,32 @@ WITH first_users_order AS (
     WHERE status NOT IN ('Returned', 'Cancelled')
 
     GROUP BY user_id
+), cohort_sizes AS (
+    SELECT
+        TO_CHAR(first_order, 'YYYY-MM') AS first_order_date,
+        COUNT(DISTINCT user_id) AS cohort_size
+    FROM first_users_order
+
+    GROUP BY TO_CHAR(first_order, 'YYYY-MM')
+), cohorts_revenue AS (
+    SELECT
+        TO_CHAR(users.first_order, 'YYYY-MM') AS first_order_date,
+        (EXTRACT(YEAR FROM items.created_at) - EXTRACT(YEAR FROM users.first_order)) * 12 + (EXTRACT(MONTH FROM items.created_at) - EXTRACT(MONTH FROM users.first_order)) AS months_from_first_order,
+        ROUND(SUM(items.sale_price), 2) AS cohort_revenue
+    FROM first_users_order AS users
+
+    JOIN order_items AS items ON(items.user_id = users.user_id)
+
+    WHERE items.status NOT IN ('Cancelled', 'Returned')
+
+    GROUP BY first_order_date, months_from_first_order
 )
 
 SELECT
-    TO_CHAR(users.first_order, 'YYYY-MM') AS first_order_date,
-    (EXTRACT(YEAR FROM items.created_at) - EXTRACT(YEAR FROM users.first_order)) * 12 + (EXTRACT(MONTH FROM items.created_at) - EXTRACT(MONTH FROM users.first_order)) AS months_from_first_order,
-    ROUND(SUM(items.sale_price), 2) AS cohort_revenue
-FROM first_users_order AS users
+    cohorts.first_order_date, cohorts.months_from_first_order, cohorts.cohort_revenue, sizes.cohort_size
+FROM cohorts_revenue AS cohorts
 
-JOIN order_items AS items ON(items.user_id = users.user_id)
-
-WHERE items.status NOT IN ('Cancelled', 'Returned')
-
-GROUP BY first_order_date, months_from_first_order;
+JOIN cohort_sizes AS sizes ON(sizes.first_order_date = cohorts.first_order_date);
 
 
 -- Retention rate

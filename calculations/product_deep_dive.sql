@@ -4,13 +4,13 @@ CREATE OR REPLACE VIEW sellings_by_product AS
 
 WITH sold_items AS (
     SELECT
-        product_id, product_name,
+        product_name,
         COUNT(*) AS all_items_product_count,
         COUNT(sold_at) AS sold_items_product_count,
         ROUND(COUNT(sold_at) * 1.0 / NULLIF(COUNT(*), 0) * 100, 2) AS sold_prct
     FROM inventory_items
 
-    GROUP BY product_id, product_name
+    GROUP BY product_name
 ), median AS (
     SELECT 
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY all_items_product_count) AS median_value
@@ -26,8 +26,8 @@ WITH sold_items AS (
 )
 
 SELECT
-    product_id, product_name, all_items_product_count, sold_items_product_count, sold_prct, volume_segment,
-    DENSE_RANK() OVER(PARTITION BY volume_segment ORDER BY sold_prct DESC) AS item_selling_rank
+    product_name, all_items_product_count, sold_items_product_count, sold_prct, volume_segment,
+    DENSE_RANK() OVER(PARTITION BY volume_segment ORDER BY all_items_product_count DESC) AS item_selling_rank
 FROM ranked_by_sellings_products;
 
 

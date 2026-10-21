@@ -68,7 +68,12 @@ WITH count_by_event AS (
 )
 
 SELECT
-    *
+    *,
+    CASE
+        WHEN event_type = 'product' THEN 'Просмотр карточки товара'
+        WHEN event_type = 'cart' THEN 'Корзина'
+        WHEN event_type = 'purchase' THEN 'Оплата'
+    END AS event_type_ru
 FROM conversion_by_event;
 
 
