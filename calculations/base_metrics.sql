@@ -22,7 +22,8 @@ WITH users_count AS (
     WHERE sold_at IS NULL
 ), order_items_counts AS (
     SELECT
-        COUNT(DISTINCT order_id) AS count_ordered
+        COUNT(DISTINCT order_id) AS count_ordered,
+        COUNT(*) AS count_ordered_items
     FROM order_items
 ), order_returns_cancels AS (
     SELECT
