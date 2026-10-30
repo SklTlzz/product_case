@@ -14,7 +14,7 @@ WITH global_max AS (
         SUM(items.sale_price) AS revenue
     FROM order_items AS items, global_max
 
-    WHERE items.status NOT IN ('Returned', 'Cancelled')
+    WHERE items.status != 'Cancelled'
 
     GROUP BY items.user_id, global_max.max_dataset_date
 ), rfm_ranking AS (

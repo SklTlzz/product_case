@@ -99,14 +99,11 @@ CREATE OR REPLACE VIEW counts_by_product AS
 
 WITH products_count AS (
     SELECT
-        products.id AS product_id,
-        products.name AS product_name,
-        COUNT(DISTINCT items.id) AS product_items_count
-    FROM products
+        product_name,
+        COUNT(*) AS product_items_count
+    FROM inventory_items
 
-    JOIN inventory_items AS items ON(products.id = items.product_id)
-
-    GROUP BY products.id, products.name
+    GROUP BY product_name
 )
 
 SELECT
