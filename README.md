@@ -1,6 +1,6 @@
 # Анализ e-commerce датасета
 
-**[Датасет на Kaggle](https://www.kaggle.com/datasets/daichiuchigashima/thelook-ecommerce?resource=download&select=thelook_ecommerce.order_items.csv)**
+**[Датасет на Kaggle](https://www.kaggle.com/datasets/daichiuchigashima/thelook-ecommerce?resource=download&select=thelook_ecommerce.order_items.csv)** | **[Скачать отчет](https://disk.yandex.ru/i/rF9vHW74rtZTKw)**
 
 Анализ e-commerce датасета TheLook. Все вычисления была проведены на чистом SQL и визуализированы с помощью Power BI
 
